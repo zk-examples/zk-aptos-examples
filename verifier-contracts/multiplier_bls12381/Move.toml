@@ -1,0 +1,11 @@
+[package]
+name = "zk_aptos"
+version = "1.0.0"
+
+[addresses]
+zk_aptos = "0x0"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"

@@ -1,0 +1,12 @@
+.aptos/
+build/
+target
+.agents/
+**/Multiplier_js/
+**/*.r1cs
+**/*.wasm
+skills-lock.json
+build_bls
+build_bn
+*.bin
+*.hex

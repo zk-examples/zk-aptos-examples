@@ -1,0 +1,12 @@
+[package]
+name = "verifier_example"
+version = "1.0.0"
+authors = []
+
+[addresses]
+groth16_example = "0x0"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
