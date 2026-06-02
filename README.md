@@ -8,6 +8,12 @@ Examples and generated Aptos Move contracts for Groth16 and Bulletproofs verific
 
 Run these commands from the repository root. Add `--run-aptos-test` to any command if you want the generated package test to run immediately after generation.
 
+### Cubic gnark BLS12-381
+
+```sh
+export-aptos-verifier generate --vk circuits/cubic-gnark/verification_key.json --proof circuits/cubic-gnark/proof.json --out verifier-contracts/cubic_gnark_bls12381 --package-name zk_aptos --module-name CubicGnarkBlsVerifier --account-address 0x0 --curve bls12381 --input-format snarkjs-json --force
+```
+
 ### ark-mimc BN254
 
 ```sh
@@ -23,7 +29,7 @@ export-aptos-verifier generate --bundle circuits/ark-mimc/artifacts/bls12_381/gr
 ### MulCircuit BLS12-381
 
 ```sh
-export-aptos-verifier generate --vk circuits/MulCircuit/artifacts/bls12_381/verification_key.json --proof circuits/MulCircuit/artifacts/bls12_381/proof.json --out verifier-contracts/mul_circuit_bls123811 --package-name zk_aptos --module-name MulCircuitBlsVerifier --account-address 0x0 --curve bls12381 --input-format snarkjs-json --force
+export-aptos-verifier generate --vk circuits/MulCircuit/artifacts/bls12_381/verification_key.json --proof circuits/MulCircuit/artifacts/bls12_381/proof.json --out verifier-contracts/mul_circuit_bls12381 --package-name zk_aptos --module-name MulCircuitBlsVerifier --account-address 0x0 --curve bls12381 --input-format snarkjs-json --force
 ```
 
 ### Multiplier BN254
@@ -49,6 +55,7 @@ aptos move test --package-dir verifier-contracts/ark_mimc_bls12381
 aptos move test --package-dir verifier-contracts/mul_circuit_bls12381
 aptos move test --package-dir verifier-contracts/multiplier_bn254
 aptos move test --package-dir verifier-contracts/multiplier_bls12381
+aptos move test --package-dir verifier-contracts/cubic_gnark_bls12381
 ```
 
 ## Circuit artifact commands
@@ -68,6 +75,13 @@ cargo test test_mimc_groth16_bls12_381
 ```sh
 cd circuits/MulCircuit
 cargo run
+```
+
+### cubic-gnark
+
+```sh
+cd circuits/cubic-gnark
+go run .
 ```
 
 ### Multiplier

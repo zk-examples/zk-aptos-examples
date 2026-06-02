@@ -10,3 +10,4 @@ build_bls
 build_bn
 *.bin
 *.hex
+.codegraph
