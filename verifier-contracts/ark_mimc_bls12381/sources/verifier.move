@@ -48,7 +48,7 @@ module zk_aptos::ArkMimcBlsVerifier {
     }
 
     fun vk_gamma_abc_g1(): vector<Element<Bls12381G1>> {
-        let result = vector::empty<Element<Bls12381G1>>();
+        let result: vector<Element<Bls12381G1>> = vector[];
         let bytes = vk_gamma_abc_g1_bytes();
         let idx = 0;
         while (idx < vector::length(&bytes)) {
@@ -74,9 +74,9 @@ module zk_aptos::ArkMimcBlsVerifier {
             let idx = 0;
             while (idx < vector::length(&public_inputs)) {
                 let scalar = deserialize_or_abort_bls12381_fr(vector::borrow(&public_inputs, idx));
-                let points = vector::empty<Element<Bls12381G1>>();
+                let points: vector<Element<Bls12381G1>> = vector[];
                 vector::push_back(&mut points, *vector::borrow(&ic, idx + 1));
-                let scalars = vector::empty<Element<Fr>>();
+                let scalars: vector<Element<Fr>> = vector[];
                 vector::push_back(&mut scalars, scalar);
                 let scaled = multi_scalar_mul(&points, &scalars);
                 acc = add(&acc, &scaled);

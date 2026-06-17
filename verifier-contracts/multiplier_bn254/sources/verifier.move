@@ -22,13 +22,13 @@ module zk_aptos::MultiplierBnVerifier {
 
     const EINVALID_PROOF: u64 = 1;
 
-    fun vk_alpha_g1_bytes(): vector<u8> { x"4c546ec198ad2be20d6f281184e8060ee0434843a6cd82cf9ebc1526c1ca8b1740b5fb50458cf4b1e4c08b5153a213ef9fe3bfa03182d4a8eeae41126034761a" }
-    fun vk_beta_g2_bytes(): vector<u8> { x"0baaaf8b3075e6ce1a90cebfd6551b747ca5a8006c4e30b2090eb36cf3d0281dd31654fefbd6b956435427243759828cbc6a70e07d9511e5f41d7b89304ff42c5429592eb920737facb290bb8038d70a97042b0530cb923cfb86d5c68ceee703319386b6ec40dc01981b2859aebe28fc9702cbc815d9b71904a4d073c1360f09" }
+    fun vk_alpha_g1_bytes(): vector<u8> { x"2914789e8255981455de247e68f372a73c983c6c18387c8d946eeb607efe5e05361a7b5c27ffcc9a4471ec5cae15bc39a62070125e2d032a93a03a8aa8bb6210" }
+    fun vk_beta_g2_bytes(): vector<u8> { x"7f936ba9280c8f647c9356e547df42fbc03ffacb1e6ee2a28449adc9cab4c01757f47646665aea8b3a84cf8e605e062e8ef9e9da2eaab64d9730b31b7e01bc2672cc4fb74cdcfae6325dc4027c5db99e9b44dec2946c3193c70ffce72b77062855de43dc70945a76527e2dbf06390e4dc94035eb4342947de443b1fb3d49e012" }
     fun vk_gamma_g2_bytes(): vector<u8> { x"edf692d95cbdde46ddda5ef7d422436779445c5e66006a42761e1f12efde0018c212f3aeb785e49712e7a9353349aaf1255dfb31b7bf60723a480d9293938e19aa7dfa6601cce64c7bd3430c69e7d1e38f40cb8d8071ab4aeb6d8cdba55ec8125b9722d1dcdaac55f38eb37033314bbc95330c69ad999eec75f05f58d0890609" }
-    fun vk_delta_g2_bytes(): vector<u8> { x"85a0d216766c0e0b57a6b12c15ad93b2b09b3a65a3f2b0d8a5b8dd35b6fea3245c0de39a6fc729b9107c1d9a422795479c3b6eb2782b5f8e9b9fc5d047f84a01be17a5f5e85c72c416f0f56b918aa44149d715b5a4ea8ff49db82b7dec8b0a243d24c9174dc72a0e5d79b1556b94dec88287304cee32c01ebf867efb4a50ba0e" }
+    fun vk_delta_g2_bytes(): vector<u8> { x"97254237a4e7565ccc6b819c8d0b1b1ec09d67ba96ddb53290f04bceb42f5011ed972c180b6bb755bd97e3890f1979eedbb656191b4cf8744604592e625cc100e247d02ee36bdd74486949a0a9cb93842e260378e5f6a14ff4d02fc57b2433123e26dbd583236a923ca2b302d46265b2364185285106f25d3e7669eea6653a0c" }
     fun vk_gamma_abc_g1_bytes(): vector<vector<u8>> { vector[
-        x"0a446c5dfcd22c9065e90e1cd61dda5121f53d09889778ccc571deff1d9ea1166cb6c7460e39752f1e5d613c9955f3e43dae0456404bde84bcba76534b49f229",
-        x"1adb626f24d71b6a8e804280adfc3feeedd4917d8b92cc2cf43cf49824bc200ad27f0910ac0aa6bcf531fdc9046009295158f12bdc15781d745dff88d940dc28",
+        x"1271b0edbd3e05946ba8e4b30ceb45731eb834b73a03ff6946fd40033dcf392eaa3c88c4b37e925627b780fc7d8816d38a01170aac010139215105a691ea1f19",
+        x"93859141fdeb3baa923d8684504546259d680a713b8e1cbd1d0d32a27cf8a11a3a7de102302424c57b805689edd06a827a4f428592d6649921c79e102eb55302",
     ] }
 
     fun vk_alpha_g1(): Element<Bn254G1> {
@@ -48,7 +48,7 @@ module zk_aptos::MultiplierBnVerifier {
     }
 
     fun vk_gamma_abc_g1(): vector<Element<Bn254G1>> {
-        let result = vector::empty<Element<Bn254G1>>();
+        let result: vector<Element<Bn254G1>> = vector[];
         let bytes = vk_gamma_abc_g1_bytes();
         let idx = 0;
         while (idx < vector::length(&bytes)) {
@@ -74,9 +74,9 @@ module zk_aptos::MultiplierBnVerifier {
             let idx = 0;
             while (idx < vector::length(&public_inputs)) {
                 let scalar = deserialize_or_abort_bn254_fr(vector::borrow(&public_inputs, idx));
-                let points = vector::empty<Element<Bn254G1>>();
+                let points: vector<Element<Bn254G1>> = vector[];
                 vector::push_back(&mut points, *vector::borrow(&ic, idx + 1));
-                let scalars = vector::empty<Element<Bn254Fr>>();
+                let scalars: vector<Element<Bn254Fr>> = vector[];
                 vector::push_back(&mut scalars, scalar);
                 let scaled = multi_scalar_mul(&points, &scalars);
                 acc = add(&acc, &scaled);

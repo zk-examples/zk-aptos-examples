@@ -22,6 +22,17 @@ module zk_aptos::ArkMimcBlsVerifier_tests {
     }
 
     #[test]
+    fun test_invalid_proof_fails() {
+        let ok = ArkMimcBlsVerifier::verify(
+            public_inputs_bytes(),
+            proof_c_bytes(),
+            proof_b_bytes(),
+            proof_a_bytes(),
+        );
+        assert!(!ok, 1);
+    }
+
+    #[test]
     fun test_invalid_public_input_fails() {
         let public_inputs = public_inputs_bytes();
         if (vector::is_empty(&public_inputs)) {
@@ -31,8 +42,9 @@ module zk_aptos::ArkMimcBlsVerifier_tests {
                 vector::pop_back(&mut proof_a);
                 vector::push_back(&mut proof_a, first + 1);
             };
+            let empty_public_inputs: vector<vector<u8>> = vector[];
             let ok = ArkMimcBlsVerifier::verify(
-                vector::empty<vector<u8>>(),
+                empty_public_inputs,
                 proof_a,
                 proof_b_bytes(),
                 proof_c_bytes(),

@@ -3,9 +3,9 @@ module zk_aptos::MulCircuitBlsVerifier_tests {
     use zk_aptos::MulCircuitBlsVerifier;
     use std::vector;
 
-    fun proof_a_bytes(): vector<u8> { x"a4c1e28d7af82b998433b0d060cba4e510ae02c09f272c586d033986714ea5df6fee91808077b4097f9ddf929791161b" }
-    fun proof_b_bytes(): vector<u8> { x"8b0fc8f39bbb1cca2997380c22f95519e0eb8b2524f90f0cbd1918824cc1d734253dee09da3a766d90658c19a2bbaddb0869718c238d0baa36e5422e51081f90fcefb61fdc5a09d5a61a76473f81b8c4b4dd1aaaa94dd5293cd542e40b359c78" }
-    fun proof_c_bytes(): vector<u8> { x"a495d3bc05fc6dd6d098f3be372553b80417d788521c551c41a62b6327db9622c0d1e466a8d794963abf64f5c4698942" }
+    fun proof_a_bytes(): vector<u8> { x"975a0a44a973a656402ffdb80c62d0a4afa80b06e3662ee24cabed074b249241feb43654762c1055e388d49a622a64cf" }
+    fun proof_b_bytes(): vector<u8> { x"b71e0f9dd07c06a1e09f8eaa68d5fea1ee6177b145c97302218acd4352b7c9d594896e7d585f0e652b2b11301889e0a008f1bccb031dbbd2cf05ec68aa730ea001260510ee3785ad817c6078e52b16b8859068950d647a92001d399909384cf6" }
+    fun proof_c_bytes(): vector<u8> { x"a331dd0522195973eaf09c931c679fda4441f3804119cf5ffb710939c9ae9f20a84a8495b313924eb603cd6a0f00903d" }
     fun public_inputs_bytes(): vector<vector<u8>> { vector[
         x"0100000001000000000000000000000000000000000000000000000000000000",
     ] }
@@ -22,6 +22,17 @@ module zk_aptos::MulCircuitBlsVerifier_tests {
     }
 
     #[test]
+    fun test_invalid_proof_fails() {
+        let ok = MulCircuitBlsVerifier::verify(
+            public_inputs_bytes(),
+            proof_c_bytes(),
+            proof_b_bytes(),
+            proof_a_bytes(),
+        );
+        assert!(!ok, 1);
+    }
+
+    #[test]
     fun test_invalid_public_input_fails() {
         let public_inputs = public_inputs_bytes();
         if (vector::is_empty(&public_inputs)) {
@@ -31,8 +42,9 @@ module zk_aptos::MulCircuitBlsVerifier_tests {
                 vector::pop_back(&mut proof_a);
                 vector::push_back(&mut proof_a, first + 1);
             };
+            let empty_public_inputs: vector<vector<u8>> = vector[];
             let ok = MulCircuitBlsVerifier::verify(
-                vector::empty<vector<u8>>(),
+                empty_public_inputs,
                 proof_a,
                 proof_b_bytes(),
                 proof_c_bytes(),

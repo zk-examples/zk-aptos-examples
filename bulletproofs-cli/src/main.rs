@@ -96,6 +96,14 @@ fn run_prove(value: u64, bits: u64, dst: String, out: String) {
         }
     };
 
+    if !value_fits_bits(value, num_bits) {
+        eprintln!(
+            "Value {} does not fit in {} bits. Expected value < 2^{}.",
+            value, num_bits, num_bits
+        );
+        process::exit(1);
+    }
+
     let mut rng = thread_rng();
     let blinding = Scalar::random(&mut rng);
 
@@ -167,8 +175,14 @@ fn run_verify(
     bits: u64,
     dst: String,
 ) {
-    let (mut commitment_hex, mut proof_hex, maybe_file_bits) = match (commitment_hex, proof_hex, input) {
-        (Some(commitment_hex), Some(proof_hex), None) => (Some(commitment_hex), Some(proof_hex), None),
+    let (mut commitment_hex, mut proof_hex, maybe_file_bits) = match (
+        commitment_hex,
+        proof_hex,
+        input,
+    ) {
+        (Some(commitment_hex), Some(proof_hex), None) => {
+            (Some(commitment_hex), Some(proof_hex), None)
+        }
         (None, None, Some(input_path)) => {
             let body = match fs::read_to_string(&input_path) {
                 Ok(v) => v,
@@ -178,7 +192,11 @@ fn run_verify(
                 }
             };
             match serde_json::from_str::<ProveOutput>(&body) {
-                Ok(data) => (Some(data.commitment_hex), Some(data.proof_hex), Some(data.num_bits)),
+                Ok(data) => (
+                    Some(data.commitment_hex),
+                    Some(data.proof_hex),
+                    Some(data.num_bits),
+                ),
                 Err(_) => {
                     println!("false");
                     return;
@@ -196,7 +214,10 @@ fn run_verify(
     let num_bits = match supported_bits(bits) {
         Some(n) => n,
         None => {
-            eprintln!("Unsupported num_bits: {}. Supported values are 8, 16, 32, 64.", bits);
+            eprintln!(
+                "Unsupported num_bits: {}. Supported values are 8, 16, 32, 64.",
+                bits
+            );
             process::exit(1);
         }
     };
@@ -275,5 +296,31 @@ fn supported_bits(bits: u64) -> Option<u64> {
         Some(bits)
     } else {
         None
+    }
+}
+
+fn value_fits_bits(value: u64, bits: u64) -> bool {
+    bits == 64 || value < (1u64 << bits)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{supported_bits, value_fits_bits};
+
+    #[test]
+    fn supported_bits_are_restricted_to_aptos_bulletproof_ranges() {
+        assert_eq!(supported_bits(8), Some(8));
+        assert_eq!(supported_bits(16), Some(16));
+        assert_eq!(supported_bits(32), Some(32));
+        assert_eq!(supported_bits(64), Some(64));
+        assert_eq!(supported_bits(7), None);
+        assert_eq!(supported_bits(128), None);
+    }
+
+    #[test]
+    fn value_must_fit_selected_range() {
+        assert!(value_fits_bits(255, 8));
+        assert!(!value_fits_bits(256, 8));
+        assert!(value_fits_bits(u64::MAX, 64));
     }
 }
