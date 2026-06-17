@@ -22,11 +22,6 @@ export-aptos-verifier --help
 ## How to use
 
 Run all commands from the `zk-aptos-examples` directory unless a step explicitly changes directories.
-The command blocks use POSIX shell syntax. In PowerShell, replace the `printf ... > input.json` lines with:
-
-```powershell
-Set-Content -NoNewline input.json '{"a":"3","b":"11"}'
-```
 
 The usual workflow is:
 
