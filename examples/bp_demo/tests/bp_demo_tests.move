@@ -1,6 +1,7 @@
 #[test_only]
 module my_addr::bp_demo_tests {
     use my_addr::bp_demo;
+    use std::vector;
 
     fun commitment_bytes(): vector<u8> {
         x"aa034e37289b4a363c10942b1ffe5ba48cfa864ab220c35e93c2ea1fa959863b"
@@ -16,6 +17,16 @@ module my_addr::bp_demo_tests {
 
     fun dst(): vector<u8> {
         x"6d792d6170746f732d6170702f72616e67652d70726f6f662f7631"
+    }
+
+    fun oversized_dst(): vector<u8> {
+        let result: vector<u8> = vector[];
+        let i = 0;
+        while (i < 257) {
+            vector::push_back(&mut result, 42);
+            i = i + 1;
+        };
+        result
     }
 
     #[test]
@@ -75,13 +86,22 @@ module my_addr::bp_demo_tests {
     }
 
     #[test]
-    #[expected_failure(abort_code = 0x010001, location = aptos_std::ristretto255_bulletproofs)]
-    fun test_malformed_proof_aborts() {
-        bp_demo::verify_range(
+    fun test_malformed_proof_returns_false() {
+        assert!(!bp_demo::verify_range(
             commitment_bytes(),
             x"00",
             32,
             dst(),
-        );
+        ), 1);
+    }
+
+    #[test]
+    fun test_oversized_dst_returns_false() {
+        assert!(!bp_demo::verify_range(
+            commitment_bytes(),
+            proof_bytes(),
+            32,
+            oversized_dst(),
+        ), 1);
     }
 }

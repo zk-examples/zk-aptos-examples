@@ -1,7 +1,22 @@
 module my_addr::bp_demo {
     use std::option;
+    use std::vector;
     use 0x1::ristretto255_bulletproofs;
     use 0x1::ristretto255_pedersen;
+
+    const MAX_DST_LENGTH: u64 = 256;
+
+    fun expected_single_proof_length(num_bits: u64): u64 {
+        if (num_bits == 8) {
+            480
+        } else if (num_bits == 16) {
+            544
+        } else if (num_bits == 32) {
+            608
+        } else {
+            672
+        }
+    }
 
     /// The proof is generated off-chain (the Move module does only verification).
     ///
@@ -17,6 +32,12 @@ module my_addr::bp_demo {
         dst: vector<u8>,
     ): bool {
         if (num_bits != 8 && num_bits != 16 && num_bits != 32 && num_bits != 64) {
+            return false;
+        };
+        if (vector::length(&dst) > MAX_DST_LENGTH) {
+            return false;
+        };
+        if (vector::length(&proof_bytes) != expected_single_proof_length(num_bits)) {
             return false;
         };
 

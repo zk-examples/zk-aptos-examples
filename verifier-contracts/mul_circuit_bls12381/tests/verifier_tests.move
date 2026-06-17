@@ -3,9 +3,9 @@ module zk_aptos::MulCircuitBlsVerifier_tests {
     use zk_aptos::MulCircuitBlsVerifier;
     use std::vector;
 
-    fun proof_a_bytes(): vector<u8> { x"975a0a44a973a656402ffdb80c62d0a4afa80b06e3662ee24cabed074b249241feb43654762c1055e388d49a622a64cf" }
-    fun proof_b_bytes(): vector<u8> { x"b71e0f9dd07c06a1e09f8eaa68d5fea1ee6177b145c97302218acd4352b7c9d594896e7d585f0e652b2b11301889e0a008f1bccb031dbbd2cf05ec68aa730ea001260510ee3785ad817c6078e52b16b8859068950d647a92001d399909384cf6" }
-    fun proof_c_bytes(): vector<u8> { x"a331dd0522195973eaf09c931c679fda4441f3804119cf5ffb710939c9ae9f20a84a8495b313924eb603cd6a0f00903d" }
+    fun proof_a_bytes(): vector<u8> { x"8b81f87d0af11fca60f0415196099021266a33393e78810975b4e7e9ff9fb7e40dbed9d5aed14d93de10a592dc1ecefb" }
+    fun proof_b_bytes(): vector<u8> { x"88726fd4e690ced6b11e12cd0feb5466864cc01896b878706bc408e42f7775a1e00981fc04e1acf7ecaffbff4aa8bd4c0d1d6c53d186784febc37d8028f7507d9c0789a15e54e3e1a12d1d92915d73535fd391879b603b3c61f649c276584eae" }
+    fun proof_c_bytes(): vector<u8> { x"a1f5ae000dec042878355a2d9de7e9fa2915480a6a68510a293f206680234b712ab73870b2056e13dc8c4a60102df503" }
     fun public_inputs_bytes(): vector<vector<u8>> { vector[
         x"0100000001000000000000000000000000000000000000000000000000000000",
     ] }

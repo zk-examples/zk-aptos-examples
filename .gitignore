@@ -11,3 +11,4 @@ build_bn
 *.bin
 *.hex
 .codegraph
+verifier-contracts/*/Move.lock

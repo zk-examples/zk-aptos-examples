@@ -3,9 +3,9 @@ module zk_aptos::CubicGnarkBlsVerifier_tests {
     use zk_aptos::CubicGnarkBlsVerifier;
     use std::vector;
 
-    fun proof_a_bytes(): vector<u8> { x"b4233d0f264fee101fa232f42bb7547de7e033eeeba27fe340aef989b1d3f202dee621c702f34bb1ca6f0dba66a0575c" }
-    fun proof_b_bytes(): vector<u8> { x"a444054c69c813fb4eea6234a456958b75b233fec560a6a8bbd1dc9b8d501c90de0b356302dbd179f85989542d0ace96003016d61a397d60a9a2aee0192299e29df42f58bce95d130d1d4efe613f3b009c9f8afd468e6e8725ca4939045382e8" }
-    fun proof_c_bytes(): vector<u8> { x"a7cb98a3126146d69ccff49af2dd63b3187780015e4b21be6e89338e126a89533a1ec55b8837f59509945263c4d3d1bb" }
+    fun proof_a_bytes(): vector<u8> { x"a1164497ca6f47f48c75fa44231a5888160ea558439b316e78199fb90ea6b53b3f879823951f1f1270cb81a3ed283554" }
+    fun proof_b_bytes(): vector<u8> { x"89e2a2c434275ebf5d1b63b0b24b79bb657b27b44a1f09cee0eb9d9e422a903eadacd290dd681b1662560c98fb016e8d0798d6f7d1f88b85d294de0a71b3b6ecc64be50638906cf53df003e5f6df807ee1b3d40ce92cd82dc4c56bf6e08a6332" }
+    fun proof_c_bytes(): vector<u8> { x"8a111ec767f3963ea49640eea7ac4f6e5718e92c255cb906d07505b098962a20d3ef48c7102d2348213f8d233e8326b2" }
     fun public_inputs_bytes(): vector<vector<u8>> { vector[
         x"2300000000000000000000000000000000000000000000000000000000000000",
     ] }

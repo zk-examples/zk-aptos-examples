@@ -3,9 +3,9 @@ module zk_aptos::MultiplierBlsVerifier_tests {
     use zk_aptos::MultiplierBlsVerifier;
     use std::vector;
 
-    fun proof_a_bytes(): vector<u8> { x"8f08324f59bd052b0a518a599b9d22f3e796d8762e7d6de6232b04bf28908568cd467e6a7ce45404695cc008c48c7206" }
-    fun proof_b_bytes(): vector<u8> { x"b4c789bba251ed0a11d8916933d0e0edfb488a5cd7d10d99bb483e0fe35f443cd1ef286840b92013b8a21e8a0069a8d9110cf8edb8c30734e565b87c21154952dc63a0d76bb87955975ad332dd209462418edd7db03364556019cc4383616fa9" }
-    fun proof_c_bytes(): vector<u8> { x"9206cc60dad617c1eab5e051080f95f76bdbcd0d56a50f6fcbb9da7666378f33f56ed83037d41da65ad898302da03f6a" }
+    fun proof_a_bytes(): vector<u8> { x"96037fc8dc9e11b22aa681a8179658834d7ee6e18ffe897d67e3c016ba841c6b1fd1b2cd47e124bf714c5ac00ce72398" }
+    fun proof_b_bytes(): vector<u8> { x"af999cad00aba39b977ed07df77c08701371325f40f3c165d4b07ac98b2890150873256a64ffa94319e0f7607f48f40f0459e84e39de1ea48364bcbee03b7f2168ba26e9a71c9f05fe6eee89f98ba36f970e03f4357dfbb6383c3b290d3fe9ef" }
+    fun proof_c_bytes(): vector<u8> { x"aa630277d5088688dc694c012f92af79b59c92459c81b739347a1c26c35fe64683130ea4977385fe5eea7df62f44100a" }
     fun public_inputs_bytes(): vector<vector<u8>> { vector[
         x"2100000000000000000000000000000000000000000000000000000000000000",
     ] }
