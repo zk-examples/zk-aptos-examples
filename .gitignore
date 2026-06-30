@@ -9,6 +9,8 @@ skills-lock.json
 build_bls
 build_bn
 *.bin
+!circuits/cubic-gnark/proof.bin
+!circuits/cubic-gnark/verification_key.bin
 *.hex
 .codegraph
 verifier-contracts/*/Move.lock

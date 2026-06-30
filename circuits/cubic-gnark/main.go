@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/consensys/gnark-crypto/ecc"
@@ -28,33 +29,107 @@ func (circuit *CubicCircuit) Define(api frontend.API) error {
 }
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
+	field := ecc.BLS12_381.ScalarField()
+
 	// compiles our circuit into a R1CS
 	var circuit CubicCircuit
-	ccs, _ := frontend.Compile(ecc.BLS12_381.ScalarField(), r1cs.NewBuilder, &circuit)
+	ccs, err := frontend.Compile(field, r1cs.NewBuilder, &circuit)
+	if err != nil {
+		return fmt.Errorf("compile circuit: %w", err)
+	}
 
 	// groth16 zkSNARK: Setup
-	pk, vk, _ := groth16.Setup(ccs)
+	pk, vk, err := groth16.Setup(ccs)
+	if err != nil {
+		return fmt.Errorf("setup groth16: %w", err)
+	}
 
 	// witness definition
 	assignment := CubicCircuit{X: 3, Y: 35}
-	witness, _ := frontend.NewWitness(&assignment, ecc.BLS12_381.ScalarField())
-	publicWitness, _ := witness.Public()
+	witness, err := frontend.NewWitness(&assignment, field)
+	if err != nil {
+		return fmt.Errorf("create witness: %w", err)
+	}
+	publicWitness, err := witness.Public()
+	if err != nil {
+		return fmt.Errorf("create public witness: %w", err)
+	}
 
 	// groth16: Prove & Verify
-	proof, _ := groth16.Prove(ccs, pk, witness)
-	groth16.Verify(proof, vk, publicWitness)
-
-	// Export the proof
-	{
-		proof_out, _ := os.Create("proof.json")
-		defer proof_out.Close()
-		_ = gnarktosnarkjs.ExportProof(proof, []string{"35"}, proof_out)
+	proof, err := groth16.Prove(ccs, pk, witness)
+	if err != nil {
+		return fmt.Errorf("prove: %w", err)
+	}
+	if err := groth16.Verify(proof, vk, publicWitness); err != nil {
+		return fmt.Errorf("verify proof: %w", err)
 	}
 
-	// Export the verification key
-	{
-		out, _ := os.Create("verification_key.json")
-		defer out.Close()
-		_ = gnarktosnarkjs.ExportVerifyingKey(vk, out)
+	schema, err := frontend.NewSchema(field, &circuit)
+	if err != nil {
+		return fmt.Errorf("create public witness schema: %w", err)
 	}
+
+	if err := writeArtifact("public.json", func(out *os.File) error {
+		return gnarktosnarkjs.ExportPublicWitness(publicWitness, schema, out)
+	}); err != nil {
+		return err
+	}
+
+	if err := writeArtifact("proof.json", func(out *os.File) error {
+		return gnarktosnarkjs.ExportProof(proof, []string{"35"}, out)
+	}); err != nil {
+		return err
+	}
+
+	if err := writeArtifact("verification_key.json", func(out *os.File) error {
+		return gnarktosnarkjs.ExportVerifyingKey(vk, out)
+	}); err != nil {
+		return err
+	}
+
+	if err := writeArtifact("proof_gnark.json", func(out *os.File) error {
+		return gnarktosnarkjs.ExportGnarkProof(proof, out)
+	}); err != nil {
+		return err
+	}
+
+	if err := writeArtifact("verification_key_gnark.json", func(out *os.File) error {
+		return gnarktosnarkjs.ExportGnarkVerifyingKey(vk, out)
+	}); err != nil {
+		return err
+	}
+
+	if err := writeArtifact("proof.bin", func(out *os.File) error {
+		return gnarktosnarkjs.ExportGnarkProofBinary(proof, out)
+	}); err != nil {
+		return err
+	}
+
+	if err := writeArtifact("verification_key.bin", func(out *os.File) error {
+		return gnarktosnarkjs.ExportGnarkVerifyingKeyBinary(vk, out)
+	}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func writeArtifact(name string, export func(*os.File) error) error {
+	out, err := os.Create(name)
+	if err != nil {
+		return fmt.Errorf("create %s: %w", name, err)
+	}
+	defer out.Close()
+
+	if err := export(out); err != nil {
+		return fmt.Errorf("export %s: %w", name, err)
+	}
+	return nil
 }

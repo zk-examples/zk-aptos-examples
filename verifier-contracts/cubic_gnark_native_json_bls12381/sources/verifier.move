@@ -1,4 +1,4 @@
-module zk_aptos::CubicGnarkBlsVerifier {
+module zk_aptos::CubicGnarkNativeJsonBlsVerifier {
     use aptos_std::bls12381_algebra::{
         Fr,
         FormatFrLsb as Bls12381FormatFrLsb,

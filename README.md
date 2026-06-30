@@ -116,7 +116,13 @@ aptos move test --package-dir verifier-contracts/multiplier_bls12381
 
 ### Cubic
 
-`circuits/cubic-gnark` contains a Gnark circuit and exports a snarkjs-compatible `verification_key.json` and `proof.json`.
+`circuits/cubic-gnark` contains a Gnark circuit and exports:
+
+- snarkjs-compatible JSON: `verification_key.json`, `proof.json`
+- native Gnark JSON from `gnark-to-snarkjs`: `verification_key_gnark.json`, `proof_gnark.json`, `public.json`
+- native Gnark `WriteTo` binary from `gnark-to-snarkjs`: `verification_key.bin`, `proof.bin`, `public.json`
+
+The native Gnark formats require `github.com/mysteryon88/gnark-to-snarkjs` v1.1.0 or newer.
 
 #### Step 1 - Generate Gnark artifacts
 
@@ -126,12 +132,28 @@ go run .
 cd ../..
 ```
 
-#### Step 2 - Export and test the Aptos verifier
+#### Step 2 - Export and test from snarkjs-compatible JSON
 
 ```sh
 export-aptos-verifier --vk circuits/cubic-gnark/verification_key.json --proof circuits/cubic-gnark/proof.json --out verifier-contracts/cubic_gnark_bls12381 --package-name zk_aptos --module-name CubicGnarkBlsVerifier --account-address 0x0 --force --run-aptos-test
 
 aptos move test --package-dir verifier-contracts/cubic_gnark_bls12381
+```
+
+#### Step 3 - Export and test from native Gnark JSON
+
+```sh
+export-aptos-verifier --vk circuits/cubic-gnark/verification_key_gnark.json --proof circuits/cubic-gnark/proof_gnark.json --public circuits/cubic-gnark/public.json --out verifier-contracts/cubic_gnark_native_json_bls12381 --package-name zk_aptos --module-name CubicGnarkNativeJsonBlsVerifier --account-address 0x0 --force --run-aptos-test
+
+aptos move test --package-dir verifier-contracts/cubic_gnark_native_json_bls12381
+```
+
+#### Step 4 - Export and test from native Gnark binary
+
+```sh
+export-aptos-verifier --vk circuits/cubic-gnark/verification_key.bin --proof circuits/cubic-gnark/proof.bin --public circuits/cubic-gnark/public.json --out verifier-contracts/cubic_gnark_bin_bls12381 --package-name zk_aptos --module-name CubicGnarkNativeBinBlsVerifier --account-address 0x0 --force --run-aptos-test
+
+aptos move test --package-dir verifier-contracts/cubic_gnark_bin_bls12381
 ```
 
 ## Arkworks

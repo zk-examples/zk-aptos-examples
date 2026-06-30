@@ -1,6 +1,6 @@
 #[test_only]
-module zk_aptos::CubicGnarkBlsVerifier_tests {
-    use zk_aptos::CubicGnarkBlsVerifier;
+module zk_aptos::CubicGnarkNativeBinBlsVerifier_tests {
+    use zk_aptos::CubicGnarkNativeBinBlsVerifier;
     use std::vector;
 
     fun proof_a_bytes(): vector<u8> { x"b93b405f3280c9c0bd8d1bbf7f16744045e551b763a946e1a17afb381923c043c8052ad6561723af516bb5e1d3e0e817" }
@@ -15,7 +15,7 @@ module zk_aptos::CubicGnarkBlsVerifier_tests {
 
     #[test]
     fun test_valid_proof() {
-        let ok = CubicGnarkBlsVerifier::verify(
+        let ok = CubicGnarkNativeBinBlsVerifier::verify(
             public_inputs_bytes(),
             proof_a_bytes(),
             proof_b_bytes(),
@@ -26,7 +26,7 @@ module zk_aptos::CubicGnarkBlsVerifier_tests {
 
     #[test]
     fun test_invalid_proof_fails() {
-        let ok = CubicGnarkBlsVerifier::verify(
+        let ok = CubicGnarkNativeBinBlsVerifier::verify(
             public_inputs_bytes(),
             proof_c_bytes(),
             proof_b_bytes(),
@@ -46,7 +46,7 @@ module zk_aptos::CubicGnarkBlsVerifier_tests {
                 vector::push_back(&mut proof_a, first + 1);
             };
             let empty_public_inputs: vector<vector<u8>> = vector[];
-            let ok = CubicGnarkBlsVerifier::verify(
+            let ok = CubicGnarkNativeBinBlsVerifier::verify(
                 empty_public_inputs,
                 proof_a,
                 proof_b_bytes(),
@@ -54,7 +54,7 @@ module zk_aptos::CubicGnarkBlsVerifier_tests {
             );
             assert!(!ok, 1);
         } else {
-            let ok = CubicGnarkBlsVerifier::verify(
+            let ok = CubicGnarkNativeBinBlsVerifier::verify(
                 invalid_public_inputs_bytes(),
                 proof_a_bytes(),
                 proof_b_bytes(),
